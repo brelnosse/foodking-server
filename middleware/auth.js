@@ -12,6 +12,5 @@ exports.checkAuth = (req, res, next)=>{
         next()
     }catch(e){
         res.status(401).json({data: 'Non autorisé.'})
-        console.log(req.headers)
     }
 }
