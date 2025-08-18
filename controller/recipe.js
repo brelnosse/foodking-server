@@ -63,3 +63,19 @@ exports.getRecipe = (req, res)=>{
     })
     .catch(error=> res.status(400).json({error}))
 }
+
+exports.getRecipesByCategory = (req, res)=>{
+    Recipe.find()
+    .then((recipes)=>{
+        let recipesByC = recipes.map((el)=>{
+            if(el.category.startsWith(req.params.name)){
+                return el
+            }
+        })
+        recipesByC = recipesByC.filter((el)=>{
+            return el;
+        })
+        res.status(200).json({recipes: recipesByC})
+    })
+    .catch((error)=> res.status(500).json({error}))
+}
