@@ -10,4 +10,5 @@ route.get('/recipes/categories', recipeCtrl.getCategories);
 route.get('/recipes/categories/:name', recipeCtrl.getRecipesByCategory);
 route.get('/recipes/search/:name', recipeCtrl.getRecipesByName)
 route.get('/recipes/:id', recipeCtrl.getRecipe)
+
 module.exports = route;
