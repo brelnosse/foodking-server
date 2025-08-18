@@ -38,8 +38,11 @@ app.use((req, res, next) => {
     }
     next();
 });
-
+app.get('/', (req, res)=>{
+    res.status(200).json({
+        message: 'Bienvenue sur le serveir api de foodking  '
+    })
+})
 app.use('/api', recipe);
 app.use('/api/auth', auth);
-
 module.exports = app;
