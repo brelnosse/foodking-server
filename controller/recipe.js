@@ -15,3 +15,9 @@ exports.createRecipe = (req, res)=>{
         res.status(400).json({error})    
     })
 }
+
+exports.getRecipes = (req, res)=>{
+    Recipe.find()
+    .then((recipes)=> res.status(200).json({recipes: recipes}))
+    .catch((error)=> res.status(400).json({error}))
+}

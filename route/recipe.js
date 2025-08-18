@@ -5,5 +5,5 @@ const multer = require('../middleware/multer-config');
 const { checkAuth } = require('../middleware/auth');
 
 route.post('/create', checkAuth, multer, recipeCtrl.createRecipe)
-
+route.get('/recipes', recipeCtrl.getRecipes)
 module.exports = route;
