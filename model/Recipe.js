@@ -6,7 +6,8 @@ const recipeSchema = mongoose.Schema({
     ingredients: {type: Array, required: true},
     category: {type: String, required: true},
     image_url: {type: String, required: true},
-    video_url: {type: String, required: true}
+    video_url: {type: String, required: true},
+    likes: {type: Array, required: false}
 })
 
 module.exports = mongoose.model('Recipe', recipeSchema)

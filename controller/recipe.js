@@ -4,7 +4,8 @@ exports.createRecipe = (req, res)=>{
     delete req.body._id;
     const recipe = new Recipe({
         ...req.body,
-        image_url: req.protocol+'://'+req.get('host')+'/images/'+req.file.filename
+        image_url: req.protocol+'://'+req.get('host')+'/images/'+req.file.filename,
+        likes: []
     })
 
     recipe.save()
@@ -78,4 +79,50 @@ exports.getRecipesByCategory = (req, res)=>{
         res.status(200).json({recipes: recipesByC})
     })
     .catch((error)=> res.status(500).json({error}))
+}
+
+exports.updateLike = (req, res) => {
+    const recipeId = req.params.id;
+    Recipe.findOne({_id: recipeId})
+    .then((recipe) => {
+        if (!recipe) {
+            return res.status(404).json({error: 'Recipe not found'});
+        }
+
+        const likes = recipe.likes || [];
+        const userIp = req.ip;
+
+        if (!likes.includes(userIp)) {
+            // Add like
+            likes.push(userIp);
+        } else {
+            // Remove like
+            const index = likes.indexOf(userIp);
+            likes.splice(index, 1);
+        }
+
+        Recipe.updateOne({_id: recipeId}, {likes: likes})
+        .then(() => {
+            res.status(200).json({data: userIp, likes: likes});
+        })
+        .catch(error => res.status(400).json({error}));
+    })
+    .catch(error => res.status(400).json({error}));
+}
+
+exports.getLikes = (req, res)=>{
+    Recipe.find()
+    .then((recipes)=>{
+        let likes = recipes.map(el =>{
+            return {
+                id: el._id,
+                likes: el.likes
+            }
+        })
+        likes.push(req.ip)
+        res.status(200).json({data: likes})
+    })
+    .catch((error)=> {
+        res.status(400).json({error})
+    })
 }

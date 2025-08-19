@@ -23,7 +23,7 @@ exports.check = (req, res) =>{
                     token: jwt.sign(
                         {userId: admin._id},
                         'RANDOM_SECRET_KEY',
-                        {expiresIn: '730h'}
+                        {expiresIn: '24h'}
                     )
                 })
             }
