@@ -38,11 +38,28 @@ app.use((req, res, next) => {
     }
     next();
 });
-app.get('/', (req, res)=>{
+app.get('/', (req, res) => {
     res.status(200).json({
-        message: 'Bienvenue sur le serveir api de foodking  '
-    })
-})
+        message: 'Bienvenue sur l\'API FoodKing',
+        description: 'API de gestion de recettes de cuisine',
+        endpoints: {
+            recipes: {
+                POST: '/api/create - Créer une nouvelle recette',
+                GET: '/api/recipes - Obtenir toutes les recettes',
+                GET: '/api/recipes/categories - Obtenir les catégories des recettes',
+                GET: '/api/recipes/categories/:name - Filtrer les recettes par catégorie',
+                GET: '/api/recipes/search/:name - Rechercher une recette par son nom',
+                GET: '/api/recipes/:id - Obtenir une recette spécifique',
+                GET: '/api/recipes/like/:id - Ajoute un like pour une recette précise',
+                GET: '-api/recipes/likes/all - Obtenir toutes les recettes avec leur likes',
+            },
+            auth: {
+                POST: '/api/check - Se connecter en admin'
+            }
+        },
+        version: '1.0.0'
+    });
+});
 app.use('/api', recipe);
 app.use('/api/auth', auth);
 module.exports = app;
