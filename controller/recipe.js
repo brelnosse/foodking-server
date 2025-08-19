@@ -36,7 +36,7 @@ exports.getCategories = (req, res)=>{
             }
         }
 
-        res.status(200).json({categories: categories})
+        res.status(200).json({categories: filteredCat})
     })
     .catch(recipes => res.status(400).json({error}))
 }
