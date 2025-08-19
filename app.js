@@ -45,13 +45,13 @@ app.get('/', (req, res) => {
         endpoints: {
             recipes: {
                 POST: '/api/create - Créer une nouvelle recette',
-                GET: '/api/recipes - Obtenir toutes les recettes',
-                GET: '/api/recipes/categories - Obtenir les catégories des recettes',
-                GET: '/api/recipes/categories/:name - Filtrer les recettes par catégorie',
-                GET: '/api/recipes/search/:name - Rechercher une recette par son nom',
-                GET: '/api/recipes/:id - Obtenir une recette spécifique',
-                GET: '/api/recipes/like/:id - Ajoute un like pour une recette précise',
-                GET: '-api/recipes/likes/all - Obtenir toutes les recettes avec leur likes',
+                GET_1: '/api/recipes - Obtenir toutes les recettes',
+                GET_2: '/api/recipes/categories - Obtenir les catégories des recettes',
+                GET_3: '/api/recipes/categories/:name - Filtrer les recettes par catégorie',
+                GET_4: '/api/recipes/search/:name - Rechercher une recette par son nom',
+                GET_5: '/api/recipes/:id - Obtenir une recette spécifique',
+                GET_6: '/api/recipes/like/:id - Ajoute un like pour une recette précise',
+                GET_7: '/api/recipes/likes/all - Obtenir toutes les recettes avec leur likes',
             },
             auth: {
                 POST: '/api/check - Se connecter en admin'
