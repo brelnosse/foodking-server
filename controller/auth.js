@@ -14,7 +14,6 @@ exports.check = (req, res) =>{
         bcrypt.compare(req.body.pwd, admin.pwd)
         .then((isValid)=>{
             if(!isValid){
-                console.log('me ')
                 res.status(401).json({data: 'Incorrect email or password !'})
                 return;
             }else{
