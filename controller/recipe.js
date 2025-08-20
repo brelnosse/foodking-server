@@ -1,20 +1,30 @@
 const Recipe = require('../model/Recipe');
 
-exports.createRecipe = (req, res)=>{
+exports.createRecipe = (req, res) => {
     delete req.body._id;
+
+    // Construire l'URL de l'image seulement si un fichier a été uploadé
+    let imageUrl = null;
+    if (req.file && req.file.filename) {
+        imageUrl = req.protocol + '://' + req.get('host') + '/images/' + req.file.filename;
+    } else if (req.body && req.body.image_url) {
+        // Accepter une URL d'image fournie dans le corps (optionnel)
+        imageUrl = req.body.image_url;
+    }
+
     const recipe = new Recipe({
         ...req.body,
-        image_url: req.protocol+'://'+req.get('host')+'/images/'+req.file.filename,
+        image_url: imageUrl,
         likes: []
-    })
+    });
 
     recipe.save()
-    .then(()=> {
-        res.status(200).json({data: 'The recipe has been successfuly created !'})    
-    })
-    .catch((error)=> {
-        res.status(400).json({error})    
-    })
+        .then(() => {
+            res.status(201).json({data: 'The recipe has been successfully created!'})
+        })
+        .catch((error) => {
+            res.status(400).json({error})
+        });
 }
 
 exports.getRecipes = (req, res)=>{

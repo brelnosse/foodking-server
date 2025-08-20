@@ -39,4 +39,19 @@ const upload = multer({
     }
 });
 
-module.exports = upload.single('image');
+// Exporter un middleware qui tolère l'absence de fichier (image optionnelle)
+const singleUpload = upload.single('image');
+
+module.exports = (req, res, next) => {
+    singleUpload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            // erreurs liées à multer (ex: limit)
+            return res.status(400).json({ error: err.message });
+        } else if (err) {
+            // Erreurs personnalisées (type MIME, etc.)
+            return res.status(400).json({ error: err.message });
+        }
+        // Pas de fichier est accepté ; continuer
+        next();
+    });
+};

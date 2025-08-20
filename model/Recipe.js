@@ -5,7 +5,7 @@ const recipeSchema = mongoose.Schema({
     description: {type: String, required: true},
     ingredients: {type: Array, required: true},
     category: {type: String, required: true},
-    image_url: {type: String, required: true},
+    image_url: {type: String, required: false},
     video_url: {type: String, required: true},
     likes: {type: Array, required: false}
 })
