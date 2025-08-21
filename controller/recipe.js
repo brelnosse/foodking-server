@@ -100,7 +100,7 @@ exports.updateLike = (req, res) => {
         }
 
         const likes = recipe.likes || [];
-        const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        const userIp = req.headers['x-forwarded-for'].split(',')[0] || req.connection.remoteAddress;
 
         if (!likes.includes(userIp)) {
             // Add like
@@ -129,7 +129,7 @@ exports.getLikes = (req, res)=>{
                 likes: el.likes
             }
         })
-        likes.push(req.headers['x-forwarded-for'] || req.connection.remoteAddress)
+        likes.push(req.headers['x-forwarded-for'].split(',')[0] || req.connection.remoteAddress)
         res.status(200).json({data: likes})
     })
     .catch((error)=> {
