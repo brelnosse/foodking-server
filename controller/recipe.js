@@ -100,7 +100,7 @@ exports.updateLike = (req, res) => {
         }
 
         const likes = recipe.likes || [];
-        const userIp = req.ip;
+        const userIp = req.connection.remoteAddress;
 
         if (!likes.includes(userIp)) {
             // Add like
@@ -129,7 +129,7 @@ exports.getLikes = (req, res)=>{
                 likes: el.likes
             }
         })
-        likes.push(req.ip)
+        likes.push(req.connection.remoteAddress)
         res.status(200).json({data: likes})
     })
     .catch((error)=> {
