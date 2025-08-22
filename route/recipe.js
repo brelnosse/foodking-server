@@ -5,6 +5,10 @@ const multer = require('../middleware/multer-config');
 const { checkAuth } = require('../middleware/auth');
 
 route.post('/create', checkAuth, multer, recipeCtrl.createRecipe);
+// Update a recipe (optionally with a new image)
+route.put('/recipes/:id', checkAuth, multer, recipeCtrl.updateRecipe);
+// Delete a recipe (and its image file if present)
+route.delete('/recipes/:id', checkAuth, recipeCtrl.deleteRecipe);
 route.get('/recipes', recipeCtrl.getRecipes);
 route.get('/recipes/categories', recipeCtrl.getCategories);
 route.get('/recipes/categories/:name', recipeCtrl.getRecipesByCategory);

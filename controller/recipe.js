@@ -129,10 +129,78 @@ exports.getLikes = (req, res)=>{
                 likes: el.likes
             }
         })
-        likes.push(req.headers['x-forwarded-for'].split(',')[0] || req.connection.remoteAddress)
+        const userIp = req.headers['x-real-ip'] || req.headers['x-forwarded-for']?.split(',')[0] || req.connection?.remoteAddress?.replace(/^.*:/, '') || '127.0.0.1';
+        likes.push(userIp)
         res.status(200).json({data: likes})
     })
     .catch((error)=> {
-        res.status(400).json({error})
+        res.status(400).json({error: 'hi'})
     })
+}
+
+// Update a recipe by id. If a new image is uploaded, replace the old file.
+exports.updateRecipe = (req, res) => {
+    const recipeId = req.params.id;
+    // Trouver la recette existante
+    Recipe.findOne({_id: recipeId})
+    .then((existing) => {
+        if (!existing) return res.status(404).json({ error: 'Recipe not found' });
+
+        // Construire l'objet de mise à jour
+        const updatedFields = { ...req.body };
+
+        if (req.file && req.file.filename) {
+            // Nouvelle image uploadée
+            updatedFields.image_url = req.protocol + '://' + req.get('host') + '/images/' + req.file.filename;
+        }
+
+        // Mettre à jour la base
+        Recipe.updateOne({ _id: recipeId }, { ...updatedFields })
+        .then(() => {
+            // Si une ancienne image existait et a été remplacée, la supprimer du disque
+            if (req.file && req.file.filename && existing.image_url) {
+                const oldFilename = existing.image_url.split('/images/')[1];
+                if (oldFilename) {
+                    const fs = require('fs');
+                    const path = require('path');
+                    const filePath = path.join(__dirname, '..', 'images', oldFilename);
+                    fs.unlink(filePath, (err) => {
+                        if (err) console.warn('Failed to delete old image:', err.message || err);
+                    });
+                }
+            }
+            res.status(200).json({ data: 'Recipe updated' });
+        })
+        .catch((error) => res.status(400).json({ error }));
+    })
+    .catch((error) => res.status(400).json({ error }));
+}
+
+// Delete a recipe by id and remove associated image file if present
+exports.deleteRecipe = (req, res) => {
+    const recipeId = req.params.id;
+    Recipe.findOne({ _id: recipeId })
+    .then((recipe) => {
+        if (!recipe) return res.status(404).json({ error: 'Recipe not found' });
+
+        // Supprimer le document
+        Recipe.deleteOne({ _id: recipeId })
+        .then(() => {
+            // Supprimer le fichier image si présent
+            if (recipe.image_url) {
+                const oldFilename = recipe.image_url.split('/images/')[1];
+                if (oldFilename) {
+                    const fs = require('fs');
+                    const path = require('path');
+                    const filePath = path.join(__dirname, '..', 'images', oldFilename);
+                    fs.unlink(filePath, (err) => {
+                        if (err) console.warn('Failed to delete image during recipe delete:', err.message || err);
+                    });
+                }
+            }
+            res.status(200).json({ data: 'Recipe deleted' });
+        })
+        .catch((error) => res.status(400).json({ error }));
+    })
+    .catch((error) => res.status(400).json({ error }));
 }
